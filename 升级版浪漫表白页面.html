@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的心意</title>
+    <style>
+        :root {
+            --primary-color: #ff4d6d;
+            --secondary-color: #ff8fab;
+            --accent-color: #ffb3c6;
+            --text-color: #333;
+            --light-color: #fff0f3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ffccd5, #ff8fab);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: var(--primary-color);
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(5px);
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .big-heart {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin: 15px 0;
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .big-heart:hover {
+            transform: scale(1.1);
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .form-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            margin: 10px 5px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(255, 77, 109, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #adb5bd);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        #love-link {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px dashed var(--primary-color);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 15px 0;
+            word-break: break-all;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-color);
+            opacity: 0;
+            z-index: 999;
+            animation: confetti 5s ease-in-out;
+        }
+        
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .music-control {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .music-control i {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+        
+        .response-message {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: var(--light-color);
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .big-heart {
+                font-size: 3rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-music"></i>
+    </div>
+    
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div class="container" id="creatorView">
+        <h1>创建你的表白</h1>
+        <div class="big-heart" onclick="playHeartSound()">❤</div>
+        
+        <div class="form-group">
+            <label for="yourName">你的名字</label>
+            <input type="text" id="yourName" placeholder="输入你的名字">
+        </div>
+        
+        <div class="form-group">
+            <label for="theirName">TA的名字</label>
+            <input type="text" id="theirName" placeholder="输入TA的名字">
+        </div>
+        
+        <div class="form-group">
+            <label for="yourMessage">想对TA说的话</label>
+            <textarea id="yourMessage" placeholder="输入你想对TA说的话...">我喜欢你！从第一次见到你，我的心就被你偷走了。你愿意和我在一起吗？</textarea>
+        </div>
+        
+        <button class="btn" onclick="generateLink()">生成表白链接</button>
+        
+        <div id="generatedLinkContainer" class="hidden">
+            <p>复制下方链接发送给TA：</p>
+            <div id="love-link"></div>
+            <button class="btn" onclick="copyLink()"><i class="fas fa-copy"></i> 复制链接</button>
+            <button class="btn btn-secondary" onclick="checkResponse()"><i class="fas fa-heart"></i> 查看回应</button>
+        </div>
+    </div>
+    
+    <div class="container hidden" id="recipientView">
+        <h1 id="greeting"></h1>
+        <div class="big-heart" onclick="playHeartSound()">❤</div>
+        
+        <div class="response-message" id="messageContent"></div>
+        
+        <div id="responseOptions">
+            <button class="btn" onclick="respond('yes')"><i class="fas fa-heart"></i> 我愿意</button>
+            <button class="btn btn-secondary" onclick="respond('no')"><i class="fas fa-hourglass-half"></i> 我再想想</button>
+        </div>
+        
+        <div id="responseResult" class="hidden">
+            <p id="resultMessage"></p>
+            <button class="btn" onclick="backToHome()"><i class="fas fa-home"></i> 返回首页</button>
+        </div>
+    </div>
+    
+    <div class="container hidden" id="responseView">
+        <h1><i class="fas fa-heart"></i> 表白回应</h1>
+        <div id="responseList"></div>
+        <button class="btn" onclick="backToCreate()"><i class="fas fa-arrow-left"></i> 返回</button>
+    </div>
+
+    <script>
+        // 音乐控制
+        const musicControl = document.getElementById('musicControl');
+        const bgMusic = document.getElementById('bgMusic');
+        let isMusicPlaying = false;
+        
+        musicControl.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicControl.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                bgMusic.play();
+                musicControl.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        });
+        
+        // 心跳声
+        function playHeartSound() {
+            const audio = new Audio('https://www.soundjay.com/mechanical/sounds/heartbeat-01.mp3');
+            audio.play();
+        }
+        
+        // 创建漂浮的心形
+        function createFloatingHearts() {
+            const container = document.getElementById('floatingHearts');
+            const heartCount = 20;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(heart);
+            }
+        }
+        
+        // 创建彩色纸屑效果
+        function createConfetti() {
+            const colors = ['#ff4d6d', '#ff8fab', '#ffb3c6', '#ffccd5', '#ff758f'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(confetti);
+                
+                // 移除动画结束的元素
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+        
+        // 检查URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const fromParam = urlParams.get('from');
+        const toParam = urlParams.get('to');
+        const msgParam = urlParams.get('msg');
+        const idParam = urlParams.get('id');
+        
+        // 页面视图
+        const creatorView = document.getElementById('creatorView');
+        const recipientView = document.getElementById('recipientView');
+        const responseView = document.getElementById('responseView');
+        
+        // 初始化
+        window.onload = function() {
+            createFloatingHearts();
+            
+            if (idParam && fromParam && toParam) {
+                // 接收者视图
+                showRecipientView(fromParam, toParam, msgParam || '我喜欢你！');
+            } else if (location.hash === '#response') {
+                // 查看回应视图
+                showResponseView();
+            } else {
+                // 创建者视图
+                showCreatorView();
+            }
+        };
+        
+        // 显示创建者视图
+        function showCreatorView() {
+            creatorView.classList.remove('hidden');
+            recipientView.classList.add('hidden');
+            responseView.classList.add('hidden');
+        }
+        
+        // 显示接收者视图
+        function showRecipientView(from, to, message) {
+            creatorView.classList.add('hidden');
+            recipientView.classList.remove('hidden');
+            responseView.classList.add('hidden');
+            
+            document.getElementById('greeting').textContent = `亲爱的 ${to}`;
+            document.getElementById('messageContent').innerHTML = `
+                <p><strong>${from} 想对你说：</strong></p>
+                <p>${message}</p>
+            `;
+        }
+        
+        // 显示回应视图
+        function showResponseView() {
+            creatorView.classList.add('hidden');
+            recipientView.classList.add('hidden');
+            responseView.classList.remove('hidden');
+            
+            const responseList = document.getElementById('responseList');
+            responseList.innerHTML = '';
+            
+            let hasResponses = false;
+            
+            // 从localStorage加载所有表白记录
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('love_msg_')) {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    
+                    if (data.response) {
+                        hasResponses = true;
+                        const responseItem = document.createElement('div');
+                        responseItem.className = 'response-message';
+                        responseItem.innerHTML = `
+                            <p><strong>你向 ${data.to} 的表白</strong></p>
+                            <p>回应: <span style="color:${data.response === 'yes' ? 'var(--primary-color)' : '#666'}">
+                                ${data.response === 'yes' ? '❤️ 愿意 ❤️' : '需要时间考虑...'}
+                            </span></p>
+                            <p>时间: ${new Date(data.responseTime).toLocaleString()}</p>
+                        `;
+                        responseList.appendChild(responseItem);
+                    }
+                }
+            }
+            
+            if (!hasResponses) {
+                responseList.innerHTML = '<p>还没有收到回应，再等等吧~</p>';
+            }
+        }
+        
+        // 生成表白链接
+        function generateLink() {
+            const yourName = document.getElementById('yourName').value.trim();
+            const theirName = document.getElementById('theirName').value.trim();
+            const yourMessage = document.getElementById('yourMessage').value.trim();
+            
+            if (!yourName || !theirName) {
+                alert('请输入你们的名字');
+                return;
+            }
+            
+            // 生成唯一ID
+            const uniqueId = 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+            
+            // 保存表白信息到localStorage
+            localStorage.setItem('love_msg_' + uniqueId, JSON.stringify({
+                from: yourName,
+                to: theirName,
+                message: yourMessage,
+                time: new Date().toISOString(),
+                response: null,
+                responseTime: null
+            }));
+            
+            // 生成可分享的链接
+            let loveUrl;
+            
+            if (window.location.href.startsWith('http')) {
+                // 在线环境
+                const baseUrl = window.location.href.split('?')[0];
+                loveUrl = `${baseUrl}?from=${encodeURIComponent(yourName)}&to=${encodeURIComponent(theirName)}&msg=${encodeURIComponent(yourMessage)}&id=${uniqueId}`;
+            } else {
+                // 本地环境 - 提示用户需要上传到网络
+                alert('请将此HTML文件上传到网络服务器（如GitHub Pages）以获得可分享链接');
+                loveUrl = `[上传后获得的网址]?from=${encodeURIComponent(yourName)}&to=${encodeURIComponent(theirName)}&msg=${encodeURIComponent(yourMessage)}&id=${uniqueId}`;
+            }
+            
+            document.getElementById('love-link').textContent = loveUrl;
+            document.getElementById('generatedLinkContainer').classList.remove('hidden');
+        }
+        
+        // 复制链接
+        function copyLink() {
+            const loveLink = document.getElementById('love-link').textContent;
+            navigator.clipboard.writeText(loveLink).then(() => {
+                alert('链接已复制！快去发送给TA吧~');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动选择并复制链接');
+            });
+        }
+        
+        // 回应表白
+        function respond(answer) {
+            if (!idParam) {
+                alert('无效的表白链接');
+                return;
+            }
+            
+            // 更新localStorage中的回应
+            const data = JSON.parse(localStorage.getItem('love_msg_' + idParam));
+            if (data) {
+                data.response = answer;
+                data.responseTime = new Date().toISOString();
+                localStorage.setItem('love_msg_' + idParam, JSON.stringify(data));
+            }
+            
+            document.getElementById('responseOptions').classList.add('hidden');
+            const resultMessage = document.getElementById('resultMessage');
+            
+            if (answer === 'yes') {
+                resultMessage.innerHTML = '❤️ 太棒了！对方会看到你的回应 ❤️';
+                createConfetti();
+            } else {
+                resultMessage.innerHTML = '对方会看到你需要时间考虑...';
+            }
+            
+            document.getElementById('responseResult').classList.remove('hidden');
+        }
+        
+        // 查看回应
+        function checkResponse() {
+            location.hash = '#response';
+            showResponseView();
+        }
+        
+        // 返回首页
+        function backToHome() {
+            location.href = window.location.href.split('?')[0];
+        }
+        
+        // 返回到创建页面
+        function backToCreate() {
+            location.hash = '';
+            showCreatorView();
+        }
+    </script>
+</body>
+</html>
